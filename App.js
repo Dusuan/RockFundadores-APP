@@ -1,27 +1,46 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View, TextInput} from "react-native";
+import { StyleSheet } from "react-native";
+
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import Home from "./Screens/Home";
+import Decide from "./Screens/Decide";
+import Search from "./Screens/Search";
+import Add from "./Screens/Add";
+
+//
+//
+//
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}> React Native</Text> 
-      <Text>Sign in into your account</Text>
-
-
-      <TextInput style={styles.input} placeholder="JhonDoe@gmail.com" />
-      <TextInput style={styles.input}placeholder="Password" />
-
-
-
-      <StatusBar style="auto"/>
-    </View> // view son divs  y text son p
-
-
-
-
-
-
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Decide"
+          component={Decide}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Add"
+          component={Add}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -34,10 +53,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  titulo: {
-    fontSize: 60,
+  text: {
+    zIndex: 1,
+    fontFamily: "monospace",
+    color: "white",
+    fontSize: 30,
+    fontWeight: "bold",
   },
-
   input: {
     width: 200,
     height: 40,
@@ -47,9 +69,19 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  gradient: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-
-
-
-
+  startimage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
