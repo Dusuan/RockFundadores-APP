@@ -27,7 +27,23 @@ const IMGBoton = ({onPress}) => (
 const Producto = () => {
   return (
     <View style = {styles.productoInsano}>
-      <Text>Producto</Text>
+
+        <View style = {styles.hilera}>
+                <Text style = { {marginRight: 20} }>Producto</Text>
+                <Text style = {{flex:1}}>Precio</Text>
+                <Text>Cantidad</Text>
+        </View >
+         <View style = {styles.hilera}>
+                  <Text style = { {marginRight: 37} }>Banda</Text>
+
+                  <View style = {[{backgroundColor: "lightblue"}, {flex:1} , {height: 70}, {paddingTop: 10} , { paddingLeft: 10}]}>
+                    <Text>Descripcion</Text>
+                  </View>
+        </View>
+        <View style = {[ { backgroundColor:"#E0E0E0" } , {width: "100%" } , {height: 1}]}>
+          <Text></Text>
+        </View>
+
     </View>
   );
 };
@@ -42,7 +58,7 @@ const Search = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.header}>
-        <Text style={styles.text}>Artículos</Text>
+        <Text style={[styles.text, {fontSize: 25}]}>Artículos</Text>
       </View>
 
       <View style={styles.searchFilter}>
@@ -62,6 +78,10 @@ const Search = ({ navigation }) => {
 
 
       <Producto/>
+      <Producto/>
+
+
+      
 
 {/* 
       <View styles={styles.table}>
@@ -92,6 +112,19 @@ const Search = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+
+  hilera: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+  },
+
+  productoInsano: {
+    marginTop: 5,
+    paddingRight: 11,
+    paddingLeft: 11,  
+  },
+
   input: {
     borderWidth: 1,
     borderRadius: 10,
@@ -131,7 +164,6 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   text: {
-    fontSize: 30,
     fontWeight: "bold",
   },
 
