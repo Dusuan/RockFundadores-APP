@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const Boton = ({title, onPress}) => (
-    <TouchableOpacity style = {styles.Buttons} onPress={onPress}>
+    <TouchableOpacity style = {[styles.Buttons, styles.smallTopSeparator]} onPress={onPress}>
         <Text style = {styles.buttonText}>
             {title}
         </Text>
@@ -31,20 +32,22 @@ const Add = ({navigation}) => {
     const [text, onChangeText] = React.useState('');    //TODO: esto es un hook, buscar como usalro bien, la verdad solo entiendo que es un destructuring !!!
 
     return (
-        <View style={styles.container}>
-            <View style={styles.form}>
-
-                <Text style={{fontSize: 30}}>
+        <SafeAreaView style={styles.container}>
+            <View style = {[{alignItems: 'center'}, {marginBottom:20} , {marginTop: 50}]}>
+                <Text style={[{fontSize: 30} ]}>
                     Agregar Producto
                 </Text>
+            </View>
+
+            <View style={styles.form}>
 
 
                 <View>
                 <Text styles={styles.paddingBot}>
-                    Nombre
+                    Name
                 </Text>
                 <TextInput
-                style={styles.input}
+                style={[styles.input, styles.smallTopSeparator]}
                 placeholder=". . . . ."
                 onChangeText={onChangeText}
                 />
@@ -55,7 +58,7 @@ const Add = ({navigation}) => {
                     Artista / Banda / Marca
                 </Text>
                 <TextInput
-                style={styles.input}
+                style={[styles.input, styles.smallTopSeparator]}
                 placeholder=". . . . ."
                 onChangeText={onChangeText}
                 />
@@ -66,7 +69,7 @@ const Add = ({navigation}) => {
                     Precio
                 </Text>
                 <TextInput
-                style={styles.input}
+                style={[styles.input, styles.smallTopSeparator]}
                 placeholder=". . . . ."
                 onChangeText={onChangeText}
                 />
@@ -77,12 +80,12 @@ const Add = ({navigation}) => {
                     Descripcion
                 </Text>
                 <TextInput
-                style={styles.input}
+                style={[styles.input, styles.smallTopSeparator]}
                 placeholder=". . . . ."
                 onChangeText={onChangeText}
                 />
                 </View>
-            <View>
+            <View style = {{alignItems: 'flex-start'}}>
                 <Text>
                     Tipo de producto
                 </Text>
@@ -95,11 +98,11 @@ const Add = ({navigation}) => {
 
             </View>
 
-            <View style={styles.button}>
-
+            <View style={[styles.button ]}>
+        
             <Boton
               title="Guardar"
-              onPress={() => {navigation.navigate("Search")}}
+              onPress={() => {navigation.navigate("Decide")}}
             />
 
             </View>
@@ -108,16 +111,22 @@ const Add = ({navigation}) => {
 
 
 
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
 
+    smallTopSeparator: {
+        marginTop: 8,
+    },
+    
+
     Buttons: {
         backgroundColor: 'black',
-        borderRadius: 10,
+        borderRadius: 8,
         padding: 10,
+        alignItems: 'center',
     },
     buttonText: {
         color: 'white',
@@ -137,9 +146,8 @@ const styles = StyleSheet.create({
     },
 
     form: {   
-        paddingTop: 150,
-        height: 400,
-        rowGap: 40,
+        paddingTop: 10,
+        rowGap: 25,
         marginLeft: 30,
         marginRight: 30,
         },
@@ -148,31 +156,23 @@ const styles = StyleSheet.create({
         zIndex: 1,
     },
 
-    button: {
-        marginTop: 400,
-        alignItems: 'center',
+    button: {   
+        marginTop: 50,
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 50,
+
     },
     container: {
-        display: 'flex',
+        flex: 1,
+        justifyContent: 'space-between'
+
     },
     text: {
         fontSize: 20,
         fontWeight: 'bold',
     },
-    startimage: {
-        flex: 1,
-        width: "100%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      gradient: {
-        position: "absolute",
-        width: "100%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-      },
+   
 });
 
 export default Add;
