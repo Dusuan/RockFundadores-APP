@@ -8,6 +8,7 @@ import Home from "./Screens/Home";
 import Decide from "./Screens/Decide";
 import Search from "./Screens/Search";
 import Add from "./Screens/Add";
+import Vender from "./Screens/Vender"
 
 //
 //
@@ -37,6 +38,11 @@ export default function App() {
         <Stack.Screen
           name="Search"
           component={Search}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Sell"
+          component={Vender}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

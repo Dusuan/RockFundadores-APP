@@ -12,11 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 
 
 
-
 //
 //
 //
-
 export default function Home({ navigation }) {
   return (
     <View style={styles.container}>

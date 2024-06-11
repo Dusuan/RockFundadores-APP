@@ -43,6 +43,7 @@ const DropdownWithIMGButton = () => {
   );
 };
 
+
 const IMGBoton = ({onPress}) => (
   <TouchableOpacity onPress={onPress}>
     <Text>...
@@ -80,6 +81,13 @@ const Producto = ({item}) => {
                 <Text style = { {marginRight: 20} }>{item.producto}</Text>
                 <Text style = {{flex:1}}> ${item.precio}</Text>
                 <Text>Cantidad: {item.cantidad}</Text>
+            <TouchableOpacity
+            onTouch={()=>{console.log("Minus product")}}
+            onLongPress={()=>{}}>
+                <View>
+                    <Text style={[{backgroundColor: "darkred"}, { paddingRight: 20}, {paddingLeft:20}, {marginLeft:20}, {borderRadius: 10}, ]}> --- </Text>
+                </View>
+            </TouchableOpacity>
         </View >
          <View style = {styles.hilera}>
                   <Text style = { [{marginRight: 37}, {flex:1}, {color:"grey"}] }>{item.banda}</Text>
@@ -98,7 +106,7 @@ const Producto = ({item}) => {
 
 
 
-const Search = ({ navigation }) => {
+const Vender = ({ navigation }) => {
 
   const [text, onChangeText] = React.useState('');    //TODO: esto es un hook, buscar como usarlo bien, la verdad solo entiendo que es un destructuring !!!
 
@@ -106,7 +114,7 @@ const Search = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.header}>
-        <Text style={[styles.text, {fontSize: 25}]}>Artículos</Text>
+        <Text style={[styles.text, {fontSize: 25}]}>VENDER</Text>
       </View>
 
       <View style={styles.searchFilter}>
@@ -196,4 +204,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Search;
+export default Vender;

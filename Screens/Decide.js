@@ -33,8 +33,8 @@ const Decide = ({navigation}) => {
               onPress={() => navigation.navigate("Add")}
             />
             <Boton
-              title="Regresar"
-              onPress={() => navigation.navigate("Home")}
+              title="Vender"
+              onPress={() => navigation.navigate("Sell")}
             />
         </View>
 

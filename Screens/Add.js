@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import {Picker} from '@react-native-picker/picker';
+import { useState } from 'react';
 
 const Boton = ({title, onPress}) => (
     <TouchableOpacity style = {[styles.Buttons, styles.smallTopSeparator]} onPress={onPress}>
@@ -11,23 +12,48 @@ const Boton = ({title, onPress}) => (
         </Text>
     </TouchableOpacity>
 );
-
-        /* implementar form de 
-        nombre,
-        precio,
-        descripcion,
-        imagen (si hay),
-        artista,
-        tipo de producto,*/
         
+      const DropdownWithButton = () => {
+            const [selectedValue, setSelectedValue] = useState(null);
+            const [showPicker, setShowPicker] = useState(false);
+          
+            const options = [
+              { label: 'CD', value: 'CD' },
+              { label: 'Vinil', value: 'VINIL' },
+              { label: 'Casete', value: 'CASETE' },
+              { label: 'Camisa', value: 'CAMISA' },
+              { label: 'Película', value: 'MOVIE' },
+
+            ];
+          
+            return (
+              <View>
+                <Boton title="Mostrar opciones" onPress={() => setShowPicker(!showPicker)} />
+          
+                {showPicker && (
+                  <Picker
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
+                    style={styles.picker}
+                  >
+                    {options.map((option) => (
+                      <Picker.Item key={option.value} label={option.label} value={option.value} />
+                    ))}
+                  </Picker>
+                )}
+          
+                
+              </View>
+            );
+          };
+
+
+     
 
 
 const Add = ({navigation}) => {
 
                      /* TODO: implementar una combobox */
-                    /* FIXME: hacerlo responsive con porsentajes y sv */
-
-
 
     const [text, onChangeText] = React.useState('');    //TODO: esto es un hook, buscar como usalro bien, la verdad solo entiendo que es un destructuring !!!
 
@@ -48,7 +74,7 @@ const Add = ({navigation}) => {
                 </Text>
                 <TextInput
                 style={[styles.input, styles.smallTopSeparator]}
-                placeholder=". . . . ."
+                placeholder=""
                 onChangeText={onChangeText}
                 />
                 </View>
@@ -59,7 +85,7 @@ const Add = ({navigation}) => {
                 </Text>
                 <TextInput
                 style={[styles.input, styles.smallTopSeparator]}
-                placeholder=". . . . ."
+                placeholder=""
                 onChangeText={onChangeText}
                 />
                 </View>
@@ -70,7 +96,7 @@ const Add = ({navigation}) => {
                 </Text>
                 <TextInput
                 style={[styles.input, styles.smallTopSeparator]}
-                placeholder=". . . . ."
+                placeholder=""
                 onChangeText={onChangeText}
                 />
                 </View>
@@ -81,7 +107,7 @@ const Add = ({navigation}) => {
                 </Text>
                 <TextInput
                 style={[styles.input, styles.smallTopSeparator]}
-                placeholder=". . . . ."
+                placeholder=""
                 onChangeText={onChangeText}
                 />
                 </View>
@@ -89,10 +115,13 @@ const Add = ({navigation}) => {
                 <Text>
                     Tipo de producto
                 </Text>
-                <Boton 
-              title="Seleccionar"
-              onPress={() => {console.log("Guardado")}}
-            />
+
+
+                
+                <DropdownWithButton/>
+
+         
+
             </View>
 
 
@@ -116,6 +145,11 @@ const Add = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+
+    picker: {
+        width: 200,
+        height: 50,
+    },
 
     smallTopSeparator: {
         marginTop: 8,
