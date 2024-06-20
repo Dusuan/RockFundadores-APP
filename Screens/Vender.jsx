@@ -43,6 +43,8 @@ const DropdownWithIMGButton = () => {
   );
 };
 
+// TODO: Quiero impolementar que identifique el mismo producto con diferentes descripciones, pero al picarle muestre todas las variantes
+
 
 const IMGBoton = ({onPress}) => (
   <TouchableOpacity onPress={onPress}>
@@ -75,7 +77,7 @@ const data = [
 
 const Producto = ({item}) => {
   return (
-    <View style = {styles.productoInsano}>
+    <SafeAreaView style = {styles.productoInsano}>
 
         <View style = {styles.hilera}>
                 <Text style = { {marginRight: 20} }>{item.producto}</Text>
@@ -100,7 +102,7 @@ const Producto = ({item}) => {
           <Text></Text>
         </View>
 
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -114,7 +116,7 @@ const Vender = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.header}>
-        <Text style={[styles.text, {fontSize: 25}]}>VENDER</Text>
+        <Text style={[styles.text, {fontSize: 25}]}>Vender</Text>
       </View>
 
       <View style={styles.searchFilter}>

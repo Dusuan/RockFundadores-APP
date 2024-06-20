@@ -5,19 +5,19 @@ import {
   View,
   TextInput,
   ImageBackground,
-  Button,
+  
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-
-
+import { SafeAreaView } from "react-native-safe-area-context";
+import Boton from '../components/Boton.jsx';
 
 //
 //
 //
 export default function Home({ navigation }) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
 
       <ImageBackground
@@ -32,12 +32,13 @@ export default function Home({ navigation }) {
             <Text style={styles.text}> Rock Fundadores</Text>
           </View>
 
-          <View style={[styles.buttonContainer, { paddingBottom:  100 },  {borderRadius:10}]}>
-            <Button
+          <View style={[styles.buttonContainer]}>
+            <Boton
               title="Comenzar"
               onPress={() => navigation.navigate("Decide")}
-              color="black"
-            />
+              containerStyle={{backgroundColor: 'black', borderRadius: 10, height: 50, alignItems: 'center', justifyContent: 'center', width: '90%'}}
+              textStyle={{color: 'white', fontSize: 20}}
+              />
           </View>
 
         </View>
@@ -47,12 +48,14 @@ export default function Home({ navigation }) {
           style={styles.gradient}
         />
       </ImageBackground>
-    </View> // view son divs  y text son p
+    </SafeAreaView> // view son divs  y text son p
   );
 }
 
 const styles = StyleSheet.create({
   // containers
+
+
   container: {
     fontWeight: "bold",
     flex: 1,
@@ -61,6 +64,7 @@ const styles = StyleSheet.create({
   },
 
   componentContainer: {
+    width: "100%",
     zIndex: 1,
     flex: 1,
     justifyContent: "space-between",
@@ -68,8 +72,13 @@ const styles = StyleSheet.create({
   },
 
   buttonContainer: {
+    alignItems: "center",
+    width: "100%",
     paddingTop: 10,
+    paddingBottom:  100 , 
+    borderRadius:10,
   },
+
 
   // rest of the styles
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 
 
 const Boton = ({title, onPress}) => (
@@ -15,14 +17,7 @@ const Boton = ({title, onPress}) => (
 
 const Decide = ({navigation}) => {
     return (
-        <View style={styles.container}>
-        <ImageBackground
-        source={require("../assets/cassetes.jpg")}
-        resizeMode="cover"
-        style={styles.startimage}
-        >
-
-
+        <SafeAreaView style={styles.container}>
         <View style={[styles.buttonContainer]}>
             <Boton
               title="Buscar"
@@ -38,26 +33,20 @@ const Decide = ({navigation}) => {
             />
         </View>
 
-
-
-
-
-<LinearGradient
+        <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)"]}
           style={styles.gradient}
         />
-</ImageBackground>
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     buttonContainer: { 
         zIndex: 1,
-        marginTop: 550,
         width: '100%',
-        alignItems: 'center',
-    },
+        justifyContent: 'center',
+        alignItems: 'center'},
 
     buttonText: {
         fontSize: 20,
@@ -76,15 +65,13 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: 'flex-end',
     },
     text: {
         fontSize: 20,
         fontWeight: 'bold',
     },
     startimage: {
-        flex: 1,
         width: "100%",
         height: "100%",
         justifyContent: "center",
