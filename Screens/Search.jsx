@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -11,44 +11,47 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {Picker} from '@react-native-picker/picker';
-import { useState } from 'react';
-const DropdownWithIMGButton = () => {
-  const [selectedValue, setSelectedValue] = useState(null);
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+const DropdownWithIMGButton = ({selectedValue, setSelectedValue}) => {
 
   const options = [
-    { label: `DEFAULT`, value: 'DEFAULT' },
-    { label: `CD's`, value: 'CD' },
-    { label: 'Viniles', value: 'VINIL' },
-    { label: 'Casetes', value: 'CASETE' },
-    { label: 'Camisas', value: 'CAMISA' },
-    { label: 'Películas', value: 'MOVIE' },
-    { label: 'Artista', value: 'ARTISTA' },
-    { label: 'Precio', value: 'PRECIO' },
-    { label: 'Tiempo', value: 'TIEMPO' },
-  ];
+    { label: `DEFAULT`, value: " " },
+    { label: `CD's`, value: "CD" },
+    { label: "Viniles", value: "Vinilo" },
+    { label: "Casetes", value: "Casette" },
+    { label: "Camisas", value: "Camisa" },
+    { label: "Películas", value: "Película" },
+    { label: "Artista", value: "Artista" },
+    { label: "Mayor que", value: "menor" },
+    { label: "Menor que", value: "mayor" },
 
+  ];
   return (
     <View>
-        <Picker
-          selectedValue={selectedValue}
-          onValueChange={(itemValue) => setSelectedValue(itemValue)}
-          style={styles.picker}
-        >
-          {options.map((option) => (
-            <Picker.Item key={option.value} label={option.label} value={option.value} />
-          ))}
-        </Picker>
+      <Picker
+        key ={selectedValue}
+        selectedValue={selectedValue}
+        onValueChange={(itemValue) => setSelectedValue(itemValue)}
+        style={styles.picker}
+      >
+        {options.map((option) => (
+          <Picker.Item
+            key={option.value}
+            label={option.label}
+            value={option.value}
+          />
+        ))}
+      </Picker>
     </View>
   );
 };
 
-const IMGBoton = ({onPress}) => (
+const IMGBoton = ({ onPress }) => (
   <TouchableOpacity onPress={onPress}>
-    <Text>...
-        
-    </Text>
-      {/* <Image
+    <Text>...</Text>
+    {/* <Image
         style ={styles.butimage}
         source={require("../assets/filtericon.png")}
         resizeMode="contain"
@@ -56,85 +59,121 @@ const IMGBoton = ({onPress}) => (
   </TouchableOpacity>
 );
 
-
-
-const data = [
-  { precio: 200, banda: "Los Beatles", descripcion: "Un disco de los Beatles", producto: "The game", cantidad: 4},
-  { precio: 150, banda: "Queen", descripcion: "Un disco de Queen", producto: "Bohemian Rhapsody", cantidad: 7},
-  { precio: 100, banda: "Led Zeppelin", descripcion: "Un disco de Led Zeppelin" , producto: "Stairway to Heaven", cantidad: 2},
-  { precio: 300, banda: "The Rolling Stones", descripcion: "Un disco de los Rolling Stones", producto: "Paint it black", cantidad: 1},
-  { precio: 250, banda: "The Doors", descripcion: "Un disco de The Doors", producto: "Light my fire", cantidad: 3},
-  { precio: 50, banda: "Pink Floyd", descripcion: "Un disco de Pink Floyd", producto: "Comfortably numb", cantidad: 5},
-  { precio: 75, banda: "The Who", descripcion: "Un disco de The Who", producto: "Baba O'Riley", cantidad: 6},
-  { precio: 125, banda: "The Eagles", descripcion: "Un disco de The Eagles", producto: "Hotel California", cantidad: 8},
-  { precio: 175, banda: "The Police", descripcion: "Un disco de The Police", producto: "Roxanne", cantidad: 9},
-  { precio: 225, banda: "The Clash", descripcion: "Un disco de The Clash", producto: "London Calling", cantidad: 10},
-  { precio: 275, banda: "The Ramones", descripcion: "Un disco de The Ramones", producto: "Blitzkrieg Bop", cantidad: 11},
-  ];
-
-const Producto = ({item}) => {
+const Producto = ({ item }) => {
   return (
-    <View style = {styles.productoInsano}>
+    <View style={styles.productoInsano}>
+      <View style={styles.hilera}>
+        <Text style={{ marginRight: 20, flex: 1 }}>{item.name}</Text>
+        <Text style={{ flex: 1 }}> ${item.price}</Text>
+        <Text>{item.producto_artista_tipo.id_tipo_producto.name}</Text>
+      </View>
+      <View style={styles.hilera}>
+        <Text style={[{ marginRight: 37 }, { flex: 1 }, { color: "grey" }]}>
+          {item.producto_artista_tipo.id_artista.name}
+        </Text>
 
-        <View style = {styles.hilera}>
-                <Text style = { {marginRight: 20} }>{item.producto}</Text>
-                <Text style = {{flex:1}}> ${item.precio}</Text>
-                <Text>Cantidad: {item.cantidad}</Text>
-        </View >
-         <View style = {styles.hilera}>
-                  <Text style = { [{marginRight: 37}, {flex:1}, {color:"grey"}] }>{item.banda}</Text>
-
-                  <View style = {[{backgroundColor: "lightgrey"}, {flex:1} ,{flexGrow:3}, {height: 70}, {paddingTop: 10} , { paddingLeft: 10}]}>
-                    <Text>{item.descripcion}</Text>
-                  </View>
+        <View
+          style={[
+            { backgroundColor: "lightgrey" },
+            { flex: 1 },
+            { flexGrow: 3 },
+            { height: 70 },
+            { paddingTop: 10 },
+            { paddingLeft: 10 },
+          ]}
+        >
+          <Text>{item.description}</Text>
         </View>
-        <View style = {[ { backgroundColor:"#E0E0E0" } , {width: "100%" } , {height: 1}]}>
-          <Text></Text>
-        </View>
-
+      </View>
+      <View
+        style={[
+          { backgroundColor: "#E0E0E0" },
+          { width: "100%" },
+          { height: 1 },
+        ]}
+      >
+        <Text></Text>
+      </View>
     </View>
   );
 };
 
-
-
 const Search = ({ navigation }) => {
+  const [text, onChangeText] = useState(""); //TODO: esto es un hook, buscar como usarlo bien, la verdad solo entiendo que es un destructuring !!!
+  const [products, setProducts] = useState([]);
+  const [selectedValue, setSelectedValue] = useState(" ");
+  json = [];
 
-  const [text, onChangeText] = React.useState('');    //TODO: esto es un hook, buscar como usarlo bien, la verdad solo entiendo que es un destructuring !!!
+  const getAllProducts = async (text, selectedValue) => {
+   if(selectedValue === "Artista"){}
+   
+   else if(selectedValue === "menor"){}
+    else if(selectedValue === "mayor"){}
+    else{
+    try {
+      const response = await fetch(`http://secret/product/?name=${text}&tipo=${selectedValue}`);
+      while (!response.ok) {
+        return json
+      }
+      json = await response.json();
+      return json;
+    } catch (error) {
+      console.error(error);
+      return json;
+    }
+  }
+  };
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const productsData = await getAllProducts(text, selectedValue);
+        setProducts(productsData);
+    };
+    fetchProducts();
+  }, [text, selectedValue]);
 
   return (
     <SafeAreaView style={styles.container}>
-
       <View style={styles.header}>
-        <Text style={[styles.text, {fontSize: 25}]}>Artículos</Text>
+        <Text style={[styles.text, { fontSize: 25 }]}>Artículos</Text>
       </View>
 
       <View style={styles.searchFilter}>
-        
-            <TextInput
-                      style={styles.input}
-                      placeholder="Buscar"
-                      onChangeText={onChangeText}
-                      />
-                <View style = {styles.ButtonsContainer}>  
-                <DropdownWithIMGButton/>
-                  </View>    
-         
+        <TextInput
+          style={styles.input}
+          placeholder="Buscar"
+          onChangeText={onChangeText}
+        />
+        <View style={styles.ButtonsContainer}>
+          <DropdownWithIMGButton selectedValue={selectedValue} setSelectedValue={setSelectedValue}/>
+        </View>
       </View>
 
-
       <FlatList
-        data={data}
+        data={products}
         renderItem={({ item }) => <Producto item={item} />}
-        keyExtractor={(item) => item.descripcion}
+        keyExtractor={(item) => item.id}
+        ListFooterComponent={<View style={{ height: 30 }}></View>}
       />
-       
     </SafeAreaView>
   );
 };
-
+/*
+{
+  "name": "Vessel",  // Replace with the desired Travis Scott album name
+  "description": "Nuevo album de top en no tan perfecto estado",  // Update description for the album
+  "price": 300,  // Replace with the actual price
+  "image": "clancy.jpg",  // Replace with the filename or path to the album image
+  "producto_artista_tipo": {
+    "id_artista": {
+      "name": "Twenty one pilots"
+    },
+    "id_tipo_producto": {
+      "name": "CD"  // Replace with the product type (e.g., CD if it's the same)
+    }
+  }
+} */
 const styles = StyleSheet.create({
-
   picker: {
     height: 50,
     width: 120,
@@ -146,9 +185,9 @@ const styles = StyleSheet.create({
   },
 
   productoInsano: {
-    marginTop: 5,
+    marginTop: 0,
     paddingRight: 11,
-    paddingLeft: 11,  
+    paddingLeft: 11,
   },
 
   input: {
@@ -159,21 +198,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingLeft : 20,
+    paddingLeft: 20,
     paddingBottom: 10,
     alignItems: "flex-start",
   },
-  
-  searchFilter: { 
+
+  searchFilter: {
     flexDirection: "row",
     alignItems: "center",
     paddingRight: 20,
     paddingLeft: 20,
-
   },
 
-  table: {
-  },
+  table: {},
 
   butimage: {
     width: 25,
@@ -188,12 +225,12 @@ const styles = StyleSheet.create({
     paddingRight: 1,
   },
   container: {
+    flex: 1,
     paddingTop: 50,
   },
   text: {
     fontWeight: "bold",
   },
-
 });
 
 export default Search;

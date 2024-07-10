@@ -1,212 +1,249 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {Picker} from '@react-native-picker/picker';
-import { useState } from 'react';
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Picker } from "@react-native-picker/picker";
+import { useState } from "react";
 
-const Boton = ({title, onPress}) => (
-    <TouchableOpacity style = {[styles.Buttons, styles.smallTopSeparator]} onPress={onPress}>
-        <Text style = {styles.buttonText}>
-            {title}
-        </Text>
-    </TouchableOpacity>
+const Boton = ({ title, onPress }) => (
+  <TouchableOpacity
+    style={[styles.Buttons, styles.smallTopSeparator]}
+    onPress={onPress}
+  >
+    <Text style={styles.buttonText}>{title}</Text>
+  </TouchableOpacity>
 );
-        
-      const DropdownWithButton = () => {
-            const [selectedValue, setSelectedValue] = useState(null);
-            const [showPicker, setShowPicker] = useState(false);
-          
-            const options = [
-              { label: 'CD', value: 'CD' },
-              { label: 'Vinil', value: 'VINIL' },
-              { label: 'Casete', value: 'CASETE' },
-              { label: 'Camisa', value: 'CAMISA' },
-              { label: 'Película', value: 'MOVIE' },
 
-            ];
-          
-            return (
-              <View>
-                <Boton title="Mostrar opciones" onPress={() => setShowPicker(!showPicker)} />
-          
-                {showPicker && (
-                  <Picker
-                    selectedValue={selectedValue}
-                    onValueChange={(itemValue) => setSelectedValue(itemValue)}
-                    style={styles.picker}
-                  >
-                    {options.map((option) => (
-                      <Picker.Item key={option.value} label={option.label} value={option.value} />
-                    ))}
-                  </Picker>
-                )}
-          
-                
-              </View>
-            );
-          };
+const DropdownWithButton = ({selectedType, setSelectedType}) => {
+  const [showPicker, setShowPicker] = useState(false);
+  const options = [
+    { label: "CD", value: "CD" },
+    { label: "Vinil", value: "Vinilo" },
+    { label: "Casete", value: "Casette" },
+    { label: "Camisa", value: "Camisa" },
+    { label: "Película", value: "Película" },
+  ];
 
+  return (
+    <View>
+      <Boton
+        title="Mostrar opciones"
+        onPress={() => setShowPicker(!showPicker)}
+      />
 
-     
-
-
-const Add = ({navigation}) => {
-
-                     /* TODO: implementar una combobox */
-
-    const [text, onChangeText] = React.useState('');    //TODO: esto es un hook, buscar como usalro bien, la verdad solo entiendo que es un destructuring !!!
-
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style = {[{alignItems: 'center'}, {marginBottom:20} , {marginTop: 50}]}>
-                <Text style={[{fontSize: 30} ]}>
-                    Agregar Producto
-                </Text>
-            </View>
-
-            <View style={styles.form}>
-
-
-                <View>
-                <Text styles={styles.paddingBot}>
-                    Name
-                </Text>
-                <TextInput
-                style={[styles.input, styles.smallTopSeparator]}
-                placeholder=""
-                onChangeText={onChangeText}
-                />
-                </View>
-                
-                <View>
-                <Text>
-                    Artista / Banda / Marca
-                </Text>
-                <TextInput
-                style={[styles.input, styles.smallTopSeparator]}
-                placeholder=""
-                onChangeText={onChangeText}
-                />
-                </View>
-
-                <View>
-                <Text>
-                    Precio
-                </Text>
-                <TextInput
-                style={[styles.input, styles.smallTopSeparator]}
-                placeholder=""
-                onChangeText={onChangeText}
-                />
-                </View>
-
-                <View>
-                <Text>
-                    Descripcion
-                </Text>
-                <TextInput
-                style={[styles.input, styles.smallTopSeparator]}
-                placeholder=""
-                onChangeText={onChangeText}
-                />
-                </View>
-            <View style = {{alignItems: 'flex-start'}}>
-                <Text>
-                    Tipo de producto
-                </Text>
-
-
-                
-                <DropdownWithButton/>
-
-         
-
-            </View>
-
-
-            </View>
-
-            <View style={[styles.button ]}>
-        
-            <Boton
-              title="Guardar"
-              onPress={() => {navigation.navigate("Decide")}}
+      {showPicker && (
+        <Picker
+          selectedValue={selectedType}
+          onValueChange={(itemValue) => setSelectedType(itemValue)}
+          style={styles.picker}
+        >
+          {options.map((option) => (
+            <Picker.Item
+              key={option.value}
+              label={option.label}
+              value={option.value}
             />
+          ))}
+        </Picker>
+      )}
+    </View>
+  );
+};
 
-            </View>
-        
+const postAPI = async (name, artist, price, description, type_product) => {
+ 
+ const url = "http://192.168.100.63:8080/product/newProduct;";
+
+  const data = {
+    name: name,
+    description: description,
+    price: price,
+    image: null, // Or null if you're setting this later
+    producto_artista_tipo: {
+      id_artista: {
+        name: artist,
+      },
+      id_tipo_producto: {
+        name: type_product,
+      },
+    },
+  };
+
+  let response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  let result = await response.json();
+
+  if (!result.ok) {
+    throw new Error(`HTTP error! status: ${result.status}`);
+  }
+  if (result.status === 200) {
+    console.warn("Producto agregado con exito");
+  } else {
+    console.error("Error al agregar producto");
+  }
+};
 
 
 
+const Add = ({ navigation }) => {
+  const [name, setName] = React.useState(""); //TODO: esto es un hook, buscar como usalro bien, la verdad solo entiendo que es un destructuring !!!
+  const [artist, setArtist] = React.useState("");
+  const [price, setPrice] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [selectedType, setSelectedType] = useState(null);
 
-        </SafeAreaView>
-    );
+  const validateFields = () => {
+        if (!name || !artist || !price || !description || !selectedType) {
+      throw new Error('All fields are required');
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View
+        style={[
+          { alignItems: "center" },
+          { marginBottom: 20 },
+          { marginTop: 50 },
+        ]}
+      >
+        <Text style={[{ fontSize: 30 }]}>Agregar Producto</Text>
+      </View>
+
+      <View style={styles.form}>
+        <View>
+          <Text styles={styles.paddingBot}>Name</Text>
+          <TextInput
+            style={[styles.input, styles.smallTopSeparator]}
+            placeholder=""
+            value={name}
+            onChangeText={(name) => setName(name)}
+          />
+        </View>
+
+        <View>
+          <Text>Artista / Banda / Marca</Text>
+          <TextInput
+            style={[styles.input, styles.smallTopSeparator]}
+            placeholder=""
+            value={artist}
+            onChangeText={(artist) => setArtist(artist)}
+          />
+        </View>
+
+        <View>
+          <Text>Precio</Text>
+          <TextInput
+            style={[styles.input, styles.smallTopSeparator]}
+            placeholder=""
+            value={price}
+            onChangeText={(price) => setPrice(price)}
+          />
+        </View>
+
+        <View>
+          <Text>Descripcion</Text>
+          <TextInput
+            style={[styles.input, styles.smallTopSeparator]}
+            placeholder=""
+            value={description}
+            onChangeText={(descripcion) => setDescription(descripcion)}
+          />
+        </View>
+        <View style={{ alignItems: "flex-start" }}>
+          <Text>Tipo de producto</Text>
+
+          <DropdownWithButton selectedType={selectedType} setSelectedType={setSelectedType} />
+
+        </View>
+      </View>
+
+      <View style={[styles.button]}>
+        <Boton
+          title="Guardar"
+          onPress={() => {
+            try {
+              validateFields();
+             postAPI(name, artist, price, description, selectedType);
+              navigation.navigate("Decide")
+            } catch (e) {
+              console.error(e);
+            }
+          }}
+        />
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
+  picker: {
+    width: 200,
+    height: 50,
+  },
 
-    picker: {
-        width: 200,
-        height: 50,
-    },
+  smallTopSeparator: {
+    marginTop: 8,
+  },
 
-    smallTopSeparator: {
-        marginTop: 8,
-    },
-    
+  Buttons: {
+    backgroundColor: "black",
+    borderRadius: 8,
+    padding: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+  },
 
-    Buttons: {
-        backgroundColor: 'black',
-        borderRadius: 8,
-        padding: 10,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-    },
+  paddingBot: {
+    paddingBottom: 10,
+  },
 
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: "#E0E0E0",
+    paddingLeft: 15,
+  },
 
-    paddingBot: {
-        paddingBottom: 10,
-    },
+  form: {
+    paddingTop: 10,
+    rowGap: 25,
+    marginLeft: 30,
+    marginRight: 30,
+  },
 
-    input: {
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#E0E0E0',
-        paddingLeft: 15,
-    },
+  buttonContainer: {
+    zIndex: 1,
+  },
 
-    form: {   
-        paddingTop: 10,
-        rowGap: 25,
-        marginLeft: 30,
-        marginRight: 30,
-        },
-
-    buttonContainer: { 
-        zIndex: 1,
-    },
-
-    button: {   
-        marginTop: 50,
-        marginLeft: 20,
-        marginRight: 20,
-        marginBottom: 50,
-
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'space-between'
-
-    },
-    text: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-   
+  button: {
+    marginTop: 50,
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 50,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
 });
 
 export default Add;
