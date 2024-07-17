@@ -11,6 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+import { API_KEY } from "@env";
 
 const Boton = ({ title, onPress }) => (
   <TouchableOpacity
@@ -59,7 +60,7 @@ const DropdownWithButton = ({selectedType, setSelectedType}) => {
 
 const postAPI = async (name, artist, price, description, type_product) => {
  
- const url = "http://192.168.100.63:8080/product/newProduct;";
+ const url = `${API_KEY}/product/newProduct;`;
 
   const data = {
     name: name,
@@ -118,12 +119,12 @@ const Add = ({ navigation }) => {
           { marginTop: 50 },
         ]}
       >
-        <Text style={[{ fontSize: 30 }]}>Agregar Producto</Text>
+        <Text style={[{ fontSize: 30 }, {color:"white"} ]}>Agregar Producto</Text>
       </View>
 
       <View style={styles.form}>
         <View>
-          <Text styles={styles.paddingBot}>Name</Text>
+          <Text style={[styles.texto]}>Name</Text>
           <TextInput
             style={[styles.input, styles.smallTopSeparator]}
             placeholder=""
@@ -133,7 +134,7 @@ const Add = ({ navigation }) => {
         </View>
 
         <View>
-          <Text>Artista / Banda / Marca</Text>
+          <Text style = {styles.texto}>Artista / Banda / Marca</Text>
           <TextInput
             style={[styles.input, styles.smallTopSeparator]}
             placeholder=""
@@ -143,7 +144,7 @@ const Add = ({ navigation }) => {
         </View>
 
         <View>
-          <Text>Precio</Text>
+          <Text  style = {styles.texto}>Precio</Text>
           <TextInput
             style={[styles.input, styles.smallTopSeparator]}
             placeholder=""
@@ -153,7 +154,7 @@ const Add = ({ navigation }) => {
         </View>
 
         <View>
-          <Text>Descripcion</Text>
+          <Text  style = {styles.texto}>Descripcion</Text>
           <TextInput
             style={[styles.input, styles.smallTopSeparator]}
             placeholder=""
@@ -162,7 +163,7 @@ const Add = ({ navigation }) => {
           />
         </View>
         <View style={{ alignItems: "flex-start" }}>
-          <Text>Tipo de producto</Text>
+          <Text  style = {styles.texto}>Tipo de producto</Text>
 
           <DropdownWithButton selectedType={selectedType} setSelectedType={setSelectedType} />
 
@@ -188,6 +189,11 @@ const Add = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  texto: {
+    color: "white",
+    fontSize: 18,
+  },
+
   picker: {
     width: 200,
     height: 50,
@@ -198,13 +204,13 @@ const styles = StyleSheet.create({
   },
 
   Buttons: {
-    backgroundColor: "black",
+    backgroundColor: "#605a56",
     borderRadius: 8,
     padding: 10,
     alignItems: "center",
   },
   buttonText: {
-    color: "white",
+    color: "black",
   },
 
   paddingBot: {
@@ -215,6 +221,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderRadius: 10,
+    backgroundColor: "#605a56",
     borderColor: "#E0E0E0",
     paddingLeft: 15,
   },
@@ -238,6 +245,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    backgroundColor: "#3a3634",
     justifyContent: "space-between",
   },
   text: {

@@ -8,14 +8,22 @@ import {
   ScrollView,
   FlatList,
   TextInput,
+  Modal,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-const DropdownWithIMGButton = ({selectedValue, setSelectedValue}) => {
+import { API_KEY } from "@env";
 
+
+const Boton = ({ title, onPress }) => (
+  <TouchableOpacity style={styles.Buttons} onPress={onPress}>
+    <Text style={styles.buttonText}>{title}</Text>
+  </TouchableOpacity>
+);
+
+const DropdownWithIMGButton = ({ selectedValue, setSelectedValue }) => {
   const options = [
     { label: `DEFAULT`, value: " " },
     { label: `CD's`, value: "CD" },
@@ -24,14 +32,13 @@ const DropdownWithIMGButton = ({selectedValue, setSelectedValue}) => {
     { label: "Camisas", value: "Camisa" },
     { label: "Películas", value: "Película" },
     { label: "Artista", value: "Artista" },
-    { label: "Mayor que", value: "menor" },
-    { label: "Menor que", value: "mayor" },
-
+    { label: "Mayor que", value: "over" },
+    { label: "Menor que", value: "under" },
   ];
   return (
     <View>
       <Picker
-        key ={selectedValue}
+        key={selectedValue}
         selectedValue={selectedValue}
         onValueChange={(itemValue) => setSelectedValue(itemValue)}
         style={styles.picker}
@@ -63,26 +70,29 @@ const Producto = ({ item }) => {
   return (
     <View style={styles.productoInsano}>
       <View style={styles.hilera}>
-        <Text style={{ marginRight: 20, flex: 1 }}>{item.name}</Text>
-        <Text style={{ flex: 1 }}> ${item.price}</Text>
-        <Text>{item.producto_artista_tipo.id_tipo_producto.name}</Text>
+        <Text style={{ marginRight: 20, flex: 1, color:"white" }}>{item.name}</Text>
+        <Text style={{ flex: 1, color:"white" }}> ${item.price}</Text>
+        <Text style={{color:"white"}}>{item.producto_artista_tipo.id_tipo_producto.name}</Text>
       </View>
       <View style={styles.hilera}>
-        <Text style={[{ marginRight: 37 }, { flex: 1 }, { color: "grey" }]}>
+        <Text style={[{ marginRight: 37 }, { flex: 1 }, { color: "#8a817c" }]}>
           {item.producto_artista_tipo.id_artista.name}
         </Text>
 
         <View
           style={[
-            { backgroundColor: "lightgrey" },
+            { backgroundColor: "#383432" },
             { flex: 1 },
-            { flexGrow: 3 },
+            { flexGrow: 3 }, 
             { height: 70 },
             { paddingTop: 10 },
             { paddingLeft: 10 },
+            { borderRadius: 10 },
+            { borderWidth: 1 },
+            { borderColor: "white" },
           ]}
         >
-          <Text>{item.description}</Text>
+          <Text style={{ color: "white" }}>{item.description}</Text>
         </View>
       </View>
       <View
@@ -102,59 +112,106 @@ const Search = ({ navigation }) => {
   const [text, onChangeText] = useState(""); //TODO: esto es un hook, buscar como usarlo bien, la verdad solo entiendo que es un destructuring !!!
   const [products, setProducts] = useState([]);
   const [selectedValue, setSelectedValue] = useState(" ");
-  json = [];
+  const [restart, setRestart] = useState(false);
 
   const getAllProducts = async (text, selectedValue) => {
-   if(selectedValue === "Artista"){}
-   
-   else if(selectedValue === "menor"){}
-    else if(selectedValue === "mayor"){}
-    else{
-    try {
-      const response = await fetch(`http://secret/product/?name=${text}&tipo=${selectedValue}`);
-      while (!response.ok) {
-        return json
+    if (selectedValue === "Artista") {
+      try {
+        const response = await fetch(
+          `${API_KEY}/product/artista/${text}`
+        );
+        while (!response.ok) {
+          setRestart(true);
+        }
+        json = await response.json();
+        return json;
+      } catch (error) {
+        console.error(error);
+        return json;
       }
-      json = await response.json();
-      return json;
-    } catch (error) {
-      console.error(error);
-      return json;
+    } else if (selectedValue === "under" || selectedValue === "over") {
+      try {
+        const response = await fetch(
+          `${API_KEY}//192.168.100.63:8080/product/price/${selectedValue}/${text}`
+        );
+        while (!response.ok) {
+          setRestart(true);
+        }
+        json = await response.json();
+        return json;
+      } catch (error) {
+        console.error(error);
+        return json;
+      }
+    } else {
+      try {
+        const response = await fetch(
+          `${API_KEY}/product/?name=${text}&tipo=${selectedValue}`
+        );
+        if (!response.ok) {
+          setRestart(true);
+          console.warn("No ok");
+        }
+        json = await response.json();
+        return json;
+      } catch (error) {
+        console.error(error);
+        return json;
+      }
     }
-  }
   };
 
   useEffect(() => {
     const fetchProducts = async () => {
       const productsData = await getAllProducts(text, selectedValue);
-        setProducts(productsData);
+      setProducts(productsData);
     };
     fetchProducts();
-  }, [text, selectedValue]);
+  }, [text, selectedValue, restart]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={[styles.text, { fontSize: 25 }]}>Artículos</Text>
-      </View>
-
-      <View style={styles.searchFilter}>
-        <TextInput
-          style={styles.input}
-          placeholder="Buscar"
-          onChangeText={onChangeText}
-        />
-        <View style={styles.ButtonsContainer}>
-          <DropdownWithIMGButton selectedValue={selectedValue} setSelectedValue={setSelectedValue}/>
+      <View style={{position: "relative"}}>
+        <View style={styles.header}>
+          <Text style={[styles.text, { fontSize: 25 }]}>Artículos</Text>
         </View>
+
+        <View style={styles.searchFilter}>
+          <TextInput
+            style={styles.input}x
+            placeholder="Buscar"
+            onChangeText={onChangeText}
+            backgroundColor="#605a56"
+          />
+          <View style={styles.ButtonsContainer}>
+            <DropdownWithIMGButton
+              selectedValue={selectedValue}
+              setSelectedValue={setSelectedValue}
+            />
+          </View>
+        </View>
+
+        <View style={styles.separador}></View>
+
       </View>
 
-      <FlatList
-        data={products}
-        renderItem={({ item }) => <Producto item={item} />}
-        keyExtractor={(item) => item.id}
-        ListFooterComponent={<View style={{ height: 30 }}></View>}
-      />
+      {!restart && (
+        
+        <FlatList
+          data={products}
+          renderItem={({ item }) => <Producto item={item} />}
+          keyExtractor={(item) => item.id}
+          ListFooterComponent={<View style={{ height: 50 }}></View>}
+        />
+      )}
+
+      {restart && (
+        <View style={[{ height: "60%" }]}>
+          <View style={{ alignItems: "center" }}>
+            <Boton title="Reiniciar" onPress={() => setRestart(false)} />
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -174,6 +231,21 @@ const Search = ({ navigation }) => {
   }
 } */
 const styles = StyleSheet.create({
+
+  separador: {
+  height: 10,
+  backgroundColor: "#24211f",
+  marginTop: 12,
+  },
+  Buttons: {
+    backgroundColor: "white",
+    alignItems: "center",
+    borderRadius: 15,
+    height: 100,
+    justifyContent: "center",
+    width: "70%",
+  },
+
   picker: {
     height: 50,
     width: 120,
@@ -185,12 +257,15 @@ const styles = StyleSheet.create({
   },
 
   productoInsano: {
+    backgroundColor: "#191716",
+    borderRadius: 0,
     marginTop: 0,
-    paddingRight: 11,
-    paddingLeft: 11,
+    paddingRight: 12,
+    paddingLeft: 12,
   },
 
   input: {
+    color: "white",
     borderWidth: 1,
     borderRadius: 10,
     borderColor: "#E0E0E0",
@@ -218,18 +293,24 @@ const styles = StyleSheet.create({
   },
 
   ButtonsContainer: {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#605a56",
     borderRadius: 10,
     marginLeft: 10,
     paddingLeft: 20,
     paddingRight: 1,
+    borderWidth: 1,
+    borderColor: "white",
   },
   container: {
+    // backgroundColor: "#010710",
+    backgroundColor: "#3a3634",
+    justifyContent: "space-between",
     flex: 1,
     paddingTop: 50,
   },
   text: {
     fontWeight: "bold",
+    color: "white",
   },
 });
 

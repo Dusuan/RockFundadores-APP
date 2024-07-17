@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   ImageBackground,
-  
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
@@ -18,16 +17,14 @@ import Boton from '../components/Boton.jsx';
 export default function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-
       <ImageBackground
-        source={require("../assets/queen.jpg")}
-        resizeMode="cover"
+        source={require("./assets/queen.jpg")}
         style={styles.startimage}
+        resizeMethod="cover"
       >
         <View style={styles.componentContainer}>
           <View style={{ paddingTop: 320 }}>
-            <Text style={styles.text}>Bienvenido a la Base</Text>
+            <Text style={styles.text}> Bienvenido a la Base</Text>
             <Text style={styles.text}> de Datos</Text>
             <Text style={styles.text}> Rock Fundadores</Text>
           </View>
@@ -68,7 +65,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     flex: 1,
     justifyContent: "space-between",
-    alignItems: "flex-bottom",
+    alignItems: "center",
   },
 
   buttonContainer: {

@@ -15,6 +15,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Picker } from "@react-native-picker/picker";
 import { useState, useEffect } from "react";
+import { API_KEY } from "@env";
+
 const DropdownWithIMGButton = ({selectedValue, setSelectedValue}) => {
   const options = [
     { label: `DEFAULT`, value: " " },
@@ -45,6 +47,11 @@ const DropdownWithIMGButton = ({selectedValue, setSelectedValue}) => {
   );
 };
 
+const Boton = ({ title, onPress }) => (
+  <TouchableOpacity style={styles.Buttons} onPress={onPress}>
+    <Text style={styles.buttonText}>{title}</Text>
+  </TouchableOpacity>
+);
 // TODO: Quiero impolementar que identifique el mismo producto con diferentes descripciones, pero al picarle muestre todas las variantes
 
 
@@ -55,7 +62,7 @@ const eliminadoCorrectamente = () => {
 };
 
 const deleteProduct = async (id, setModalVisible, setFlatListVisible) => {
-  const url = `http://secret/product/${id}`;
+  const url = `${API_KEY}/product/${id}`;
   try {
     let response = await fetch(url, {
       method: "DELETE",
@@ -66,6 +73,7 @@ const deleteProduct = async (id, setModalVisible, setFlatListVisible) => {
     if(response.ok){
       setFlatListVisible(false);
       setModalVisible(true);
+      return
     }
   } catch (error) {
     console.error(error);
@@ -86,9 +94,9 @@ const Producto = ({ item, setModalVisible, setFlatListVisible }) => {
   return (
     <SafeAreaView style={styles.productoInsano}>
       <View style={styles.hilera}>
-        <Text style={{ marginRight: 20, flex: 1 }}>{item.name}</Text>
-        <Text style={{ flex: 1 }}> ${item.price}</Text>
-        <Text>{item.producto_artista_tipo.id_tipo_producto.name}</Text>
+        <Text style={{ marginRight: 20, flex: 1 , color:"white"}}>{item.name}</Text>
+        <Text style={{ flex: 1, color:"white" }}> ${item.price}</Text>
+        <Text style={{color:"white"}}>{item.producto_artista_tipo.id_tipo_producto.name}</Text>
         <TouchableOpacity
           onPress={() => {
           deleteProduct(item.id, setModalVisible, setFlatListVisible);
@@ -111,21 +119,24 @@ const Producto = ({ item, setModalVisible, setFlatListVisible }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.hilera}>
-        <Text style={[{ marginRight: 37 }, { flex: 1 }, { color: "grey" }]}>
+        <Text style={[{ marginRight: 37 }, { flex: 1 }, { color: "#8a817c" }]}>
           {item.producto_artista_tipo.id_artista.name}
         </Text>
 
         <View
           style={[
-            { backgroundColor: "lightgrey" },
+            { backgroundColor: "#383432" },
             { flex: 1 },
-            { flexGrow: 3 },
+            { flexGrow: 3 }, 
             { height: 70 },
             { paddingTop: 10 },
             { paddingLeft: 10 },
+            { borderRadius: 10 },
+            { borderWidth: 1 },
+            { borderColor: "white" },
           ]}
         >
-          <Text>{item.description}</Text>
+          <Text style={{color:"white"}}>{item.description}</Text>
         </View>
       </View>
       <View
@@ -147,13 +158,13 @@ const Vender = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [flatListVisible, setFlatListVisible] = useState(true);
   const [selectedValue, setSelectedValue] = useState(" ");
-
+  const [damn, setDamn] = useState(" ");
   json = [];
 
   const getAllProducts = async (text, selectedValue) => {
     try {
-      const response = await fetch(`http://192.168.100.63:8080/product/?name=${text}&tipo=${selectedValue}`);
-      while (!response.ok) {
+      const response = await fetch(`${API_KEY}/product/?name=${text}&tipo=${selectedValue}`);
+      if (!response.ok) {
         return json
       }
       json = await response.json();
@@ -171,12 +182,16 @@ const Vender = ({ navigation }) => {
       
     };
     fetchProducts();
-  }, [text, selectedValue] );
+  }, [text, selectedValue, modalVisible, flatListVisible, damn] );
+
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
+      <View>
       <View style={styles.header}>
-        <Text style={[styles.text, { fontSize: 25 }]}>Vender</Text>
+        <Text style={[styles.text, { fontSize: 25 }, {color:"white"}]}>Vender</Text>
       </View>
 
       <View style={styles.searchFilter}>
@@ -184,11 +199,17 @@ const Vender = ({ navigation }) => {
           style={styles.input}
           placeholder="Buscar"
           onChangeText={onChangeText}
+          backgroundColor="#605a56"
+
         />
         <View style={styles.ButtonsContainer}>
           <DropdownWithIMGButton  selectedValue={selectedValue} setSelectedValue={setSelectedValue}/>
         </View>
       </View>
+      <View style={styles.separador}></View>
+    </View>
+
+
 
       {flatListVisible && (<FlatList
         data={products}
@@ -223,25 +244,43 @@ const Vender = ({ navigation }) => {
       </Modal>
 
       
+      
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+
+  separador: {
+    height: 10,
+    backgroundColor: "#24211f",
+    marginTop: 12,
+      
+    },
+
+    Buttons: {
+      backgroundColor: "white",
+      alignItems: "center",
+      borderRadius: 15,
+      height: 100,
+      justifyContent: "center",
+      width: "70%",
+    },
+
   picker: {
     height: 50,
     width: 120,
   },
   hilera: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     padding: 10,
-  },
+    },
 
   productoInsano: {
-    marginTop: 5,
-    paddingRight: 11,
-    paddingLeft: 11,
+    backgroundColor: "#191716",
+    paddingRight: 12,
+    paddingLeft: 12,
   },
 
   input: {
@@ -272,17 +311,21 @@ const styles = StyleSheet.create({
   },
 
   ButtonsContainer: {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#605a56",
     borderRadius: 10,
     marginLeft: 10,
     paddingLeft: 20,
     paddingRight: 1,
+    borderWidth: 1,
+    borderColor: "white",
   },
   container: {
+    backgroundColor: "#3a3634",
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 30,
   },
   text: {
+    color: "white",
     fontWeight: "bold",
   },
 });
