@@ -15,7 +15,7 @@ But we can select other kind of product that is stored in the database
 
 <img src="https://github.com/user-attachments/assets/178ed039-2351-494a-90c4-702c403110de" width="220" height="450">
 
-The selling or deletion of prouduct is pretty much similar, having a product sold message
+The selling or deletion of product is pretty much similar, having a product sold message
 
 <img src="https://github.com/user-attachments/assets/3b313d7e-55c2-45c0-a3f7-c169e9e60071" width="220" height="450"> <img src="https://github.com/user-attachments/assets/d5477c10-e606-424a-bd52-6378b89b3ea5" width="220" height="450">
 
